@@ -1,8 +1,12 @@
 import random
 
+from artemis.src.core.simulation_config import SimulationConfig
+
+
 class ArtemisModel:
-    def __init__(self):
-        random.seed(7919)
+    def __init__(self, simulationConfig:SimulationConfig):
+        self.simulationConfig = simulationConfig
+        random.seed(simulationConfig.seed)
 
     def get_random_int(self)->int:
         return random.randint(0, 100)

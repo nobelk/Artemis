@@ -1,2 +1,2 @@
 # Artemis
-Agent Reputation &amp; Trust Environment for Macro-scale Interaction Simulation.
+Multiagent Environment for Macro-scale Interaction Simulation.
