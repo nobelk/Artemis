@@ -25,15 +25,15 @@ class TestShortTermMemory:
         memory = ShortTermMemory()
         assert isinstance(memory, Memory)
 
-    def test_get_empty_messages(self):
-        """Test get() returns empty list when no messages added"""
+    def test_recall_empty_messages(self):
+        """Test recall() returns empty list when no messages added"""
         memory = ShortTermMemory()
-        result = memory.get()
+        result = memory.recall()
         assert result == []
         assert isinstance(result, list)
 
-    def test_get_with_messages(self):
-        """Test get() returns messages after they are added"""
+    def test_recall_with_messages(self):
+        """Test recall() returns messages after they are added"""
         memory = ShortTermMemory()
         # Directly add messages to _messages
         test_messages = [
@@ -42,24 +42,24 @@ class TestShortTermMemory:
         ]
         memory._messages = test_messages
 
-        result = memory.get()
+        result = memory.recall()
         assert result == test_messages
         assert len(result) == 2
 
-    def test_get_returns_same_reference(self):
-        """Test that get() returns a reference to the internal messages list"""
+    def test_recall_returns_same_reference(self):
+        """Test that recall() returns a reference to the internal messages list"""
         memory = ShortTermMemory()
         test_message = {'role': 'user', 'content': 'Test'}
         memory._messages.append(test_message)
 
-        result = memory.get()
+        result = memory.recall()
         # Verify it's the same reference
         assert result is memory._messages
 
     def test_messages_mutability(self):
         """Test that messages can be modified through the reference"""
         memory = ShortTermMemory()
-        messages = memory.get()
+        messages = memory.recall()
 
         # Add a message through the reference
         messages.append({'role': 'user', 'content': 'New message'})

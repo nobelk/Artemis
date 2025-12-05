@@ -49,21 +49,21 @@ class TestSummarizationBasedMemory:
         memory = SummarizationBasedMemory(bot=mock_bot)
         assert isinstance(memory, Memory)
 
-    def test_get_with_empty_messages(self, mock_bot):
-        """Test get() with no messages"""
+    def test_recall_with_empty_messages(self, mock_bot):
+        """Test recall() with no messages"""
         mock_bot.run.return_value = iter([
             {'role': 'assistant', 'content': 'No conversation to summarize.'}
         ])
 
         memory = SummarizationBasedMemory(bot=mock_bot)
-        result = memory.get()
+        result = memory.recall()
 
         # Should still create a summary even with empty messages
         assert isinstance(result, str)
         mock_bot.run.assert_called_once()
 
-    def test_get_with_user_assistant_messages(self, mock_bot):
-        """Test get() creates summary from user and assistant messages"""
+    def test_recall_with_user_assistant_messages(self, mock_bot):
+        """Test recall() creates summary from user and assistant messages"""
         expected_summary = "User greeted. Assistant responded politely."
         mock_bot.run.return_value = iter([
             {'role': 'assistant', 'content': expected_summary}
@@ -77,7 +77,7 @@ class TestSummarizationBasedMemory:
             {'role': 'assistant', 'content': 'I am doing well, thank you!'}
         ]
 
-        result = memory.get()
+        result = memory.recall()
 
         assert result == expected_summary
 
@@ -92,8 +92,8 @@ class TestSummarizationBasedMemory:
         assert 'user: Hello' in messages[0]['content']
         assert 'assistant: Hi there!' in messages[0]['content']
 
-    def test_get_filters_system_messages(self, mock_bot):
-        """Test that get() only includes user and assistant messages, not system"""
+    def test_recall_filters_system_messages(self, mock_bot):
+        """Test that recall() only includes user and assistant messages, not system"""
         expected_summary = "Brief conversation summary."
         mock_bot.run.return_value = iter([
             {'role': 'assistant', 'content': expected_summary}
@@ -107,7 +107,7 @@ class TestSummarizationBasedMemory:
             {'role': 'system', 'content': 'Another system message'}
         ]
 
-        result = memory.get()
+        result = memory.recall()
 
         # Verify system messages are not included in summary prompt
         call_args = mock_bot.run.call_args
@@ -118,8 +118,8 @@ class TestSummarizationBasedMemory:
         assert 'user: Hello' in content
         assert 'assistant: Hi!' in content
 
-    def test_get_with_multiple_response_items(self, mock_bot):
-        """Test that get() returns the last item from bot response"""
+    def test_recall_with_multiple_response_items(self, mock_bot):
+        """Test that recall() returns the last item from bot response"""
         mock_bot.run.return_value = iter([
             {'role': 'assistant', 'content': 'First response'},
             {'role': 'assistant', 'content': 'Second response'},
@@ -131,11 +131,11 @@ class TestSummarizationBasedMemory:
             {'role': 'user', 'content': 'Test'}
         ]
 
-        result = memory.get()
+        result = memory.recall()
 
         assert result == 'Final summary'
 
-    def test_get_formats_conversation_correctly(self, mock_bot):
+    def test_recall_formats_conversation_correctly(self, mock_bot):
         """Test that conversation is formatted correctly for summarization"""
         mock_bot.run.return_value = iter([
             {'role': 'assistant', 'content': 'Summary'}
@@ -147,7 +147,7 @@ class TestSummarizationBasedMemory:
             {'role': 'assistant', 'content': 'First response'}
         ]
 
-        memory.get()
+        memory.recall()
 
         call_args = mock_bot.run.call_args
         messages = call_args[1]['messages']
@@ -166,8 +166,8 @@ class TestSummarizationBasedMemory:
         assert hasattr(memory, 'put')
         assert callable(memory.put)
 
-    def test_get_with_empty_content_messages(self, mock_bot):
-        """Test get() handles messages with empty content"""
+    def test_recall_with_empty_content_messages(self, mock_bot):
+        """Test recall() handles messages with empty content"""
         mock_bot.run.return_value = iter([
             {'role': 'assistant', 'content': 'Summary of minimal conversation.'}
         ])
@@ -178,7 +178,7 @@ class TestSummarizationBasedMemory:
             {'role': 'assistant', 'content': 'Response'}
         ]
 
-        result = memory.get()
+        result = memory.recall()
 
         assert isinstance(result, str)
         # Verify it still creates the summary prompt correctly

@@ -7,5 +7,5 @@ class ShortTermMemory(Memory):
     def put(self):
         self._memory.append(self._messages)
 
-    def get(self):
+    def recall(self):
         return self._messages

@@ -8,7 +8,7 @@ class ContextWindowMemory(Memory):
     def put(self):
         self._memory.append(self._messages)
 
-    def get(self):
+    def recall(self):
         system_msgs = [m for m in self._messages if m.get('role') == 'system']
         recent_msgs = self._messages[-(self.max_tokens // 100):]  # Rough estimate
         return system_msgs + recent_msgs

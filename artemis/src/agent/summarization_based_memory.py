@@ -11,7 +11,7 @@ class SummarizationBasedMemory(Memory):
     def put(self):
         self._memory.append(self._messages)
 
-    def get(self):
+    def recall(self):
         """Create a summary of the conversation so far"""
         conversation_text = "\n".join([
             f"{m['role']}: {m['content']}"

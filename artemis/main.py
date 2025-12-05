@@ -1,23 +1,23 @@
+from src.agent.context_window_memory import ContextWindowMemory
 from src.agent.assistant import create_assistant
 
 
 def main():
     print("Artemis simulation!")
-    messages = []
+    memory = ContextWindowMemory()
     bot = create_assistant()
     while True:
         query = input('\nUser: ')
         if query.lower() in ['exit', 'quit']:
             break
 
-        messages.append({'role': 'user', 'content': query})
+        memory.put({'role': 'user', 'content': query})
 
         response = []
-        for response_chunk in bot.run(messages=messages):
+        for response_chunk in bot.run(messages=memory.recall()):
             response.append(response_chunk)
             print(response_chunk, end='', flush=True)
 
-        messages.extend(response)
         print()  # New line after response
 
 

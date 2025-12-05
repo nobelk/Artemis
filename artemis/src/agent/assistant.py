@@ -20,7 +20,7 @@ def create_assistant():
     multi_tool_agent = Assistant(
         llm=llm_cfg,
         function_list=['calculator'],
-        system_message='You are a helpful assistant with access calculator tools.'
+        system_message='You are a helpful assistant with access to a calculator tool.'
     )
     return multi_tool_agent
 
